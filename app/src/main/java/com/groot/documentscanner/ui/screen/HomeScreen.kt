@@ -1,7 +1,6 @@
 package com.groot.documentscanner.ui.screen
 
 import android.app.Activity
-import android.os.Environment
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
@@ -28,12 +27,13 @@ import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.SCANNER_MODE_FULL
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
-import com.groot.documentscanner.utility.FileUtility
-import java.io.File
-import java.io.FileOutputStream
+import com.groot.documentscanner.ui.components.ButtonView
+import com.groot.documentscanner.ui.components.CustomTopAppBar
+import com.groot.documentscanner.ui.theme.PurpleGrey40
 
 @Composable
 fun HomeScreen() {
+    val topBgColor = PurpleGrey40
 
     val activity = LocalContext.current as Activity
 
@@ -71,7 +71,12 @@ fun HomeScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-
+            CustomTopAppBar(
+                bgColor = topBgColor,
+                fgColor = Color.White,
+                titleBarText = "Scan Document",
+                actionItemText = "History",
+            )
         },
         content = {
             Column(
@@ -82,10 +87,8 @@ fun HomeScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-
                 if (showScannedDocument.value) {
                     PdfPreview(filePath.value)
-
                 }
 
 
@@ -116,15 +119,16 @@ fun HomeScreen() {
                         }
                     )
 
-                    Button(
+                    ButtonView(
+                        topBgColor = topBgColor,
+                        fgColor = Color.White,
                         onClick = {
                             val options = GmsDocumentScannerOptions.Builder()
                                 .setGalleryImportAllowed(true)
-                                .setPageLimit(2)
+                                .setPageLimit(pageCountText.value.toInt())
                                 .setResultFormats(RESULT_FORMAT_JPEG, RESULT_FORMAT_PDF)
                                 .setScannerMode(SCANNER_MODE_FULL)
                                 .build()
-
 
                             val scanner = GmsDocumentScanning.getClient(options)
 
@@ -138,9 +142,7 @@ fun HomeScreen() {
                                 }
 
                         },
-                        content = {
-                            Text(text = "Scan Document")
-                        }
+                        text = "Scan Document"
                     )
                 }
 
