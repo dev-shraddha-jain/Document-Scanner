@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">PaperToDigitalr</string>
+    <string name="app_name">PaperToDigital</string>
+    <string name="app_widget_description">Widget to open document scanner</string>
+
 </resources>

@@ -1,6 +1,9 @@
 package com.groot.documentscanner.ui.screen
 
 import android.app.Activity
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -14,6 +17,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,6 +31,7 @@ import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.RESULT_
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions.SCANNER_MODE_FULL
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
+import com.groot.documentscanner.receiver.GlanceSampleReceiver
 import com.groot.documentscanner.ui.components.ButtonView
 import com.groot.documentscanner.ui.components.CustomTopAppBar
 import com.groot.documentscanner.ui.theme.PurpleGrey40
@@ -68,6 +73,17 @@ fun HomeScreen() {
     BackHandler {
         showScannedDocument.value = true
     }
+
+    LaunchedEffect(true) {
+        val appWidgetManager = AppWidgetManager.getInstance(activity)
+        val myProvider = ComponentName(activity, GlanceSampleReceiver::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            appWidgetManager.isRequestPinAppWidgetSupported
+            appWidgetManager.requestPinAppWidget(myProvider, null, null)
+        } else {
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
